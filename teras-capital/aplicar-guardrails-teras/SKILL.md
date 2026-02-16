@@ -1,6 +1,10 @@
 ---
 name: aplicar-guardrails-teras
 description: Aplica guardrails de marca, reputación y compliance de TERAS Capital. Úsese como complemento de cualquier output TERAS para verificar anti-patterns, corregir misposicionamiento, eliminar hype, proteger confidencialidad y ejecutar lint automático antes de entregar. Activa cuando se mencione TERAS, control de calidad, brand review, o revisión reputacional.
+capa: L0-fundacion
+version: "1.0"
+plataformas: [claude, codex, gemini-gems, notebooklm, n8n]
+dependencias: [operar-como-teras]
 ---
 
 # Aplicar Guardrails TERAS — Anti‑Patterns y Control de Marca

@@ -1,6 +1,10 @@
 ---
 name: desarrollar-ux-teras
 description: Desarrolla interfaces de usuario siguiendo el Brand Manual TERAS v1.0. Úsese cuando el usuario mencione TERAS, Teras Capital, productos fintech/capital privado, o cualquier UI que deba transmitir sobriedad técnica, rigor profesional y potencia visual con el sistema cromático Black/Red Teras/Grey Teras.
+capa: L0-fundacion
+version: "1.0"
+plataformas: [claude, codex, gemini-gems, notebooklm, n8n]
+dependencias: [operar-como-teras]
 ---
 
 # Desarrollar UX Estilo TERAS

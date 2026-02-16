@@ -8,6 +8,10 @@ description: >
   o cualquier workstream legal transaccional. Orquesta una red agéntica de 8 sub-agentes
   especializados bajo una tesis unificada: cada cláusula debe apuntar a una palanca concreta
   de creación de valor o mitigación de riesgos de ejecución.
+capa: L2-roles
+version: "1.0"
+plataformas: [claude, codex, gemini-gems, notebooklm, n8n]
+dependencias: [operar-como-teras, aplicar-guardrails-teras, negociar-ma-teras]
 ---
 
 # CLO Super‑Poder — TERAS Capital

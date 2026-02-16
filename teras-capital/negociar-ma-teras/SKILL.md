@@ -1,6 +1,10 @@
 ---
 name: negociar-ma-teras
 description: Negocia transacciones M&A como super-negociador de TERAS Capital. Úsese cuando el usuario mencione SPA, SHA, JV, partners pact, due diligence, BATNA, ZOPA, cláusulas contractuales, signing-closing, MAC/MAE, reps & warranties, earn-out, completion accounts, locked box, o negociación transaccional avanzada. Cubre buyer-side, seller-side y acuerdos de accionistas.
+capa: L3c-procesos
+version: "1.0"
+plataformas: [claude, codex, gemini-gems, notebooklm, n8n]
+dependencias: [operar-como-teras, aplicar-guardrails-teras, negociar-mandatos-teras]
 ---
 
 # Negociar M&A TERAS — Super-Negociador Transaccional

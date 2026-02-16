@@ -1,6 +1,10 @@
 ---
 name: negociar-mandatos-teras
 description: Negocia mandatos operativos y economics de TERAS Capital con sponsors VC/infra/PE. Úsese cuando el usuario mencione pipeline comercial, reunión con sponsor, propuesta de mandato, fees, sweet equity, paquetes económicos, commercial pitch, o ruta a co-GP. Cubre desde qualification hasta post-deal onboarding.
+capa: L3c-procesos
+version: "1.0"
+plataformas: [claude, codex, gemini-gems, notebooklm, n8n]
+dependencias: [operar-como-teras, aplicar-guardrails-teras]
 ---
 
 # Negociar Mandatos TERAS — Actividad Comercial con Sponsors

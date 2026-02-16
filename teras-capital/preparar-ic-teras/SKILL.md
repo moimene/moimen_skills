@@ -1,6 +1,10 @@
 ---
 name: preparar-ic-teras
 description: Prepara y gana Investment Committees (IC) para TERAS Capital. Úsese cuando el usuario mencione IC, Investment Committee, IC note, IC pack, IC memo, KPI pack, risk register, governance chart, comité de inversiones, preparación de IC, o cuando se necesite preparar materiales para aprobación de inversión. Cubre IC notes, KPI packs, risk registers, governance charts, incentive alignment notes y simulación de Q&A.
+capa: L3c-procesos
+version: "1.0"
+plataformas: [claude, codex, gemini-gems, notebooklm, n8n]
+dependencias: [operar-como-teras, aplicar-guardrails-teras]
 ---
 
 # Preparar IC TERAS — Investment Committee Readiness
