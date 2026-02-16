@@ -1,0 +1,383 @@
+{
+    "name": "W1_AdversarialReview",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "adversarial-review",
+                "options": {}
+            },
+            "id": "webhook-trigger",
+            "name": "Webhook Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                250,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "assignments": {
+                    "assignments": [
+                        {
+                            "id": "document",
+                            "name": "document",
+                            "value": "={{ $json.document_text }}",
+                            "type": "string"
+                        },
+                        {
+                            "id": "run_id",
+                            "name": "run_id",
+                            "value": "={{ $json.run_id }}",
+                            "type": "string"
+                        },
+                        {
+                            "id": "doc_id",
+                            "name": "doc_id",
+                            "value": "={{ $json.doc_id }}",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "prepare-context",
+            "name": "Prepare Context",
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                470,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "gpt-4o",
+                "messages": {
+                    "values": [
+                        {
+                            "content": "Eres un analista PARANOICO especializado en encontrar problemas.\n\nINSTRUCCIONES:\n1. Asume que TODO el documento puede contener errores, omisiones o riesgos ocultos\n2. Extrae ABSOLUTAMENTE TODO lo que pueda ser relevante\n3. Marca CUALQUIER ambigüedad como potencial problema\n4. Prefiere falsos positivos a falsos negativos\n5. No asumas buena fe en ninguna cláusula\n\nTU OBJETIVO: Producir una lista exhaustiva de findings, incluso los que parezcan menores.\n\nOUTPUT FORMAT (JSON):\n{\n  \"findings\": [\n    {\n      \"id\": \"F001\",\n      \"type\": \"risk|obligation|ambiguity|missing|contradiction\",\n      \"severity\": \"high|medium|low\",\n      \"text_excerpt\": \"...\",\n      \"analysis\": \"...\",\n      \"location\": \"paragraph X, line Y\"\n    }\n  ],\n  \"alerts\": [\"...\"],\n  \"confidence\": 0.0-1.0\n}",
+                            "role": "system"
+                        },
+                        {
+                            "content": "={{ $json.document }}",
+                            "role": "user"
+                        }
+                    ]
+                },
+                "options": {
+                    "temperature": 0.7,
+                    "responseFormat": "json_object"
+                }
+            },
+            "id": "agent-paranoico",
+            "name": "Agent: Paranoico",
+            "type": "n8n-nodes-base.openAi",
+            "typeVersion": 1.4,
+            "position": [
+                690,
+                300
+            ],
+            "credentials": {
+                "openAiApi": {
+                    "id": "OPENAI_API_CREDENTIAL_ID",
+                    "name": "OpenAI account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const rawOutput = $input.first().json.message.content;\nconst parsed = JSON.parse(rawOutput);\n\nreturn [{\n  json: {\n    paranoico_output: parsed,\n    document: $('Prepare Context').first().json.document,\n    run_id: $('Prepare Context').first().json.run_id,\n    doc_id: $('Prepare Context').first().json.doc_id\n  }\n}];"
+            },
+            "id": "parse-paranoico",
+            "name": "Parse Paranoico Output",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                910,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "gpt-4o",
+                "messages": {
+                    "values": [
+                        {
+                            "content": "Eres un VALIDADOR escéptico. Tu trabajo es verificar los findings del agente anterior.\n\nINSTRUCCIONES:\n1. NO confíes en el análisis anterior - verifica cada finding contra el documento original\n2. Para cada finding, busca el texto exacto en el documento\n3. Marca contradicciones entre findings\n4. Identifica findings duplicados o redundantes\n5. Clasifica cada finding como: CONFIRMED | REJECTED | NEEDS_REVIEW\n\nRECIBES:\n- El documento ORIGINAL (fuente de verdad)\n- Los findings del agente Paranoico\n\nTU OBJETIVO: Producir un set validado, eliminando falsos positivos sin perder verdaderos positivos.\n\nOUTPUT FORMAT (JSON):\n{\n  \"validated_findings\": [\n    {\n      \"original_id\": \"F001\",\n      \"status\": \"CONFIRMED|REJECTED|NEEDS_REVIEW\",\n      \"verification_notes\": \"...\",\n      \"source_quote\": \"texto exacto del documento\"\n    }\n  ],\n  \"discrepancies\": [\"...\"],\n  \"validation_confidence\": 0.0-1.0\n}",
+                            "role": "system"
+                        },
+                        {
+                            "content": "DOCUMENTO ORIGINAL:\n{{ $json.document }}\n\n---\n\nFINDINGS DEL AGENTE PARANOICO:\n{{ JSON.stringify($json.paranoico_output, null, 2) }}",
+                            "role": "user"
+                        }
+                    ]
+                },
+                "options": {
+                    "temperature": 0.3,
+                    "responseFormat": "json_object"
+                }
+            },
+            "id": "agent-validador",
+            "name": "Agent: Validador",
+            "type": "n8n-nodes-base.openAi",
+            "typeVersion": 1.4,
+            "position": [
+                1130,
+                300
+            ],
+            "credentials": {
+                "openAiApi": {
+                    "id": "OPENAI_API_CREDENTIAL_ID",
+                    "name": "OpenAI account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const rawOutput = $input.first().json.message.content;\nconst parsed = JSON.parse(rawOutput);\n\n// Filtrar solo CONFIRMED y NEEDS_REVIEW\nconst relevant = parsed.validated_findings.filter(\n  f => f.status === 'CONFIRMED' || f.status === 'NEEDS_REVIEW'\n);\n\nreturn [{\n  json: {\n    validated_findings: relevant,\n    rejected_count: parsed.validated_findings.filter(f => f.status === 'REJECTED').length,\n    discrepancies: parsed.discrepancies,\n    run_id: $('Parse Paranoico Output').first().json.run_id,\n    doc_id: $('Parse Paranoico Output').first().json.doc_id\n  }\n}];"
+            },
+            "id": "filter-confirmed",
+            "name": "Filter CONFIRMED",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1350,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "gpt-4o-mini",
+                "messages": {
+                    "values": [
+                        {
+                            "content": "Eres un SANITIZER pragmático. Tu trabajo es producir el output final limpio y estructurado.\n\nINSTRUCCIONES:\n1. Toma solo los findings CONFIRMED del validador\n2. Elimina duplicados y agrupa findings relacionados\n3. Normaliza formatos (fechas, montos, entidades)\n4. Ordena por severidad (high > medium > low)\n5. Genera un resumen ejecutivo\n\nTU OBJETIVO: Producir un output limpio, estructurado y listo para consumo.\n\nOUTPUT FORMAT (JSON):\n{\n  \"summary\": {\n    \"total_findings\": N,\n    \"high_severity\": N,\n    \"medium_severity\": N,\n    \"low_severity\": N,\n    \"recommendation\": \"APPROVE|REJECT|REVIEW\"\n  },\n  \"findings\": [\n    {\n      \"id\": \"F001\",\n      \"category\": \"...\",\n      \"severity\": \"high|medium|low\",\n      \"description\": \"...\",\n      \"recommendation\": \"...\"\n    }\n  ],\n  \"executive_summary\": \"...\"\n}",
+                            "role": "system"
+                        },
+                        {
+                            "content": "FINDINGS VALIDADOS:\n{{ JSON.stringify($json.validated_findings, null, 2) }}",
+                            "role": "user"
+                        }
+                    ]
+                },
+                "options": {
+                    "temperature": 0.2,
+                    "responseFormat": "json_object"
+                }
+            },
+            "id": "agent-sanitizer",
+            "name": "Agent: Sanitizer",
+            "type": "n8n-nodes-base.openAi",
+            "typeVersion": 1.4,
+            "position": [
+                1570,
+                300
+            ],
+            "credentials": {
+                "openAiApi": {
+                    "id": "OPENAI_API_CREDENTIAL_ID",
+                    "name": "OpenAI account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const rawOutput = $input.first().json.message.content;\nconst parsed = JSON.parse(rawOutput);\n\nreturn [{\n  json: {\n    result: parsed,\n    run_id: $('Filter CONFIRMED').first().json.run_id,\n    doc_id: $('Filter CONFIRMED').first().json.doc_id\n  }\n}];"
+            },
+            "id": "parse-final",
+            "name": "Parse Final Result",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1790,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{ $env.CALLBACK_URL }}",
+                "authentication": "none",
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"run_id\": \"{{ $json.run_id }}\",\n  \"doc_id\": \"{{ $json.doc_id }}\",\n  \"status\": \"COMPLETED\",\n  \"decision\": \"{{ $json.result.summary.recommendation }}\",\n  \"findings_count\": {{ $json.result.summary.total_findings }},\n  \"result\": {{ JSON.stringify($json.result) }}\n}",
+                "options": {}
+            },
+            "id": "callback-success",
+            "name": "Callback: Success",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                2010,
+                300
+            ]
+        },
+        {
+            "parameters": {},
+            "id": "error-trigger",
+            "name": "Error Trigger",
+            "type": "n8n-nodes-base.errorTrigger",
+            "typeVersion": 1,
+            "position": [
+                1350,
+                500
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{ $env.CALLBACK_URL }}",
+                "authentication": "none",
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "run_id",
+                            "value": "={{ $json.run_id }}"
+                        },
+                        {
+                            "name": "status",
+                            "value": "FAILED"
+                        },
+                        {
+                            "name": "error_message",
+                            "value": "={{ $json.error.message }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "callback-error",
+            "name": "Callback: Error",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1570,
+                500
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Prepare Context",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Prepare Context": {
+            "main": [
+                [
+                    {
+                        "node": "Agent: Paranoico",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Agent: Paranoico": {
+            "main": [
+                [
+                    {
+                        "node": "Parse Paranoico Output",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse Paranoico Output": {
+            "main": [
+                [
+                    {
+                        "node": "Agent: Validador",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Agent: Validador": {
+            "main": [
+                [
+                    {
+                        "node": "Filter CONFIRMED",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Filter CONFIRMED": {
+            "main": [
+                [
+                    {
+                        "node": "Agent: Sanitizer",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Agent: Sanitizer": {
+            "main": [
+                [
+                    {
+                        "node": "Parse Final Result",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse Final Result": {
+            "main": [
+                [
+                    {
+                        "node": "Callback: Success",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Error Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Callback: Error",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "staticData": null,
+    "tags": [
+        {
+            "name": "adversarial-agents"
+        },
+        {
+            "name": "ai-pipeline"
+        },
+        {
+            "name": "template"
+        }
+    ],
+    "meta": {
+        "templateId": "W1_AdversarialReview",
+        "description": "Pipeline de revisión adversarial con 3 agentes: Paranoico → Validador → Sanitizer",
+        "instanceId": "exported-from-skill"
+    }
+}

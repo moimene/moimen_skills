@@ -1,0 +1,146 @@
+skill_id: litigation.swot.adversarial.v1
+name: "El Abogado del Diablo (SWOT)"
+description: "Analiza escritos procesales buscando debilidades lógicas y falta de carga probatoria."
+author: "Legal Engineering Dept."
+version: "1.0.2"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PERFIL DE SEGURIDAD
+# ═══════════════════════════════════════════════════════════════════════════════
+# Diseñado para máxima confidencialidad: todo ocurre en RAM dentro del Enclave.
+# Sin conexión a Internet, sin persistencia en disco.
+
+security_profile:
+  network_access: DENIED           # Bloqueo total de red
+  file_system: READ_ONLY_INPUT     # Solo lectura del documento de entrada
+  memory_protection: ENCLAVE_ISOLATED  # Aislamiento de memoria
+  data_retention: NONE             # Sin persistencia post-ejecución
+  audit_logging: LOCAL_ONLY        # Logs solo en sistema local
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# INPUTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+inputs:
+  - name: legal_brief
+    type: file
+    formats: 
+      - PDF
+      - DOCX
+      - DOC
+      - TXT
+    description: "El escrito de demanda, contestación o cualquier documento procesal a analizar."
+    max_size_mb: 50
+    required: true
+
+  - name: analysis_mode
+    type: enum
+    values:
+      - ADVERSARIAL      # Buscar debilidades (default)
+      - SELF_AUDIT       # Revisar nuestro propio escrito antes de presentar
+      - COMPARATIVE      # Comparar dos versiones
+    default: ADVERSARIAL
+    description: "Modo de análisis según el objetivo estratégico."
+
+  - name: focus_areas
+    type: array
+    items: string
+    default: ["HECHOS", "FUNDAMENTOS", "PETITUM"]
+    description: "Secciones específicas a analizar con mayor profundidad."
+
+  - name: severity_threshold
+    type: enum
+    values: [HIGH, MEDIUM, LOW]
+    default: MEDIUM
+    description: "Severidad mínima para incluir hallazgos en el informe."
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# OUTPUTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+outputs:
+  - name: swot_matrix
+    type: object
+    description: "Matriz DAFO estratégica con hallazgos clasificados."
+    schema:
+      strengths: array       # Puntos fuertes del contrario (defensa difícil)
+      weaknesses: array      # Debilidades argumentales explotables
+      opportunities: array   # Huecos probatorios para impugnar
+      threats: array         # Puntos que nos perjudican
+
+  - name: findings_json
+    type: array
+    description: "Array de hallazgos detallados por segmento analizado."
+
+  - name: executive_summary
+    type: string
+    description: "Resumen ejecutivo de 3-5 puntos para el socio."
+
+  - name: action_items
+    type: array
+    description: "Lista priorizada de acciones procesales recomendadas."
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# HERRAMIENTAS REQUERIDAS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+tools_required:
+  - id: pdf_parser_local
+    description: "Motor OCR/Texto local para extracción de PDF"
+    fallback: pymupdf
+    
+  - id: docx_parser
+    description: "Parser de documentos DOCX"
+    fallback: python-docx
+    
+  - id: python_sandbox
+    description: "Sandbox Python para estructurar JSON y lógica de negocio"
+    version: ">=3.10"
+    
+  - id: local_llm_inference
+    description: "Inferencia LLM en chip local (sin API pública)"
+    recommended_models:
+      - llama-3-70b-instruct
+      - mixtral-8x22b-instruct
+      - qwen2-72b-instruct
+    min_context_window: 8192
+    temperature_range: [0.1, 0.3]
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# CONFIGURACIÓN DE EJECUCIÓN
+# ═══════════════════════════════════════════════════════════════════════════════
+
+execution:
+  timeout_seconds: 300
+  max_retries: 2
+  chunk_size_tokens: 2048
+  overlap_tokens: 256
+  parallel_segments: false   # Secuencial para mantener contexto
+  
+inference:
+  temperature: 0.2           # Baja para máxima precisión analítica
+  top_p: 0.9
+  max_output_tokens: 1024
+  stop_sequences: ["```"]
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# METADATA
+# ═══════════════════════════════════════════════════════════════════════════════
+
+metadata:
+  category: legal-analysis
+  tags:
+    - litigation
+    - swot
+    - adversarial
+    - legal-tech
+    - document-analysis
+  compliance:
+    - GDPR
+    - attorney-client-privilege
+  last_updated: "2026-02-06"
+  tested_with:
+    - "demandas civiles"
+    - "contestaciones"
+    - "recursos de apelación"
+    - "escritos de conclusiones"

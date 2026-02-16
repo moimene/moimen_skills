@@ -1,0 +1,177 @@
+{
+    "executive_summary": [
+        "✅ 4 oportunidades de impugnación por déficit probatorio",
+        "⚠️ 3 falacias argumentativas detectadas",
+        "🚨 2 puntos de riesgo que requieren defensa activa"
+    ],
+    "swot_matrix": {
+        "strengths": [
+            {
+                "segment": 5,
+                "description": "Acta notarial de fecha 15/03/2025 documenta fehacientemente la entrega de la obra",
+                "impact": "Prueba preconstituida difícil de combatir"
+            }
+        ],
+        "weaknesses": [
+            {
+                "segment": 14,
+                "fallacy": "Non Sequitur",
+                "quote": "Como existió intercambio de emails, hubo aceptación tácita del contrato",
+                "action": "Negar nexo causal. Los emails comerciales no implican perfección contractual. Exigir elemento esencial: precio determinado o determinable (art. 1273 CC)."
+            },
+            {
+                "segment": 22,
+                "fallacy": "Contradicción Interna",
+                "quote": "Hechos: 'nunca se entregó la obra' vs. Fundamentos: 'la entrega fue defectuosa'",
+                "action": "Usar contradicción para impugnar credibilidad global del escrito. Destacar incoherencia que imposibilita defensa efectiva."
+            },
+            {
+                "segment": 4,
+                "fallacy": "Ad Hominem",
+                "quote": "El demandado, con su conocido historial de incumplimientos en el sector...",
+                "action": "Acusar mala fe procesal. Solicitar que se elimine referencia a hechos no acreditados y ajenos al objeto del procedimiento."
+            }
+        ],
+        "opportunities": [
+            {
+                "segment": 14,
+                "type": "Déficit Probatorio",
+                "description": "Afirmación de promesa de pago de 50.000€ sin aportar contrato, email ni documento que la acredite",
+                "action": "Negar la existencia de tal promesa. Aplicar principio dispositivo (art. 217 LEC). Solicitar desestimación del hecho por falta de prueba.",
+                "legal_basis": "Art. 217.2 LEC"
+            },
+            {
+                "segment": 31,
+                "type": "Déficit Probatorio",
+                "description": "Lucro cesante de 50.000€ sin pericial económica, facturas ni base documental alguna",
+                "action": "Solicitar inadmisión de la reclamación de lucro cesante por falta absoluta de prueba del quantum. Subsidiariamente, impugnar por genérica e indeterminada.",
+                "legal_basis": "Art. 219 LEC - Sentencias con reserva de liquidación"
+            },
+            {
+                "segment": 18,
+                "type": "Déficit Probatorio",
+                "description": "Afirma daños morales sin cuantificación ni criterio objetivo",
+                "action": "Impugnar por genérica. Exigir baremo o criterio objetivo de cuantificación.",
+                "legal_basis": "STS 25/03/2020"
+            },
+            {
+                "segment": 7,
+                "type": "Déficit Probatorio",
+                "description": "Referencia a 'testigos del vecindario' sin identificación ni proposición formal de prueba",
+                "action": "Oponerse a prueba testifical genérica. Exigir identificación conforme art. 284 LEC.",
+                "legal_basis": "Art. 284 LEC"
+            }
+        ],
+        "threats": [
+            {
+                "segment": 5,
+                "description": "Acta notarial sólida acredita la fecha y estado de la entrega",
+                "risk_level": "HIGH",
+                "mitigation": "No impugnar la prueba documental. Centrar defensa en interpretación de las obligaciones, no en los hechos documentados."
+            },
+            {
+                "segment": 12,
+                "description": "Cita correcta de jurisprudencia TS sobre enriquecimiento injusto (STS 345/2024)",
+                "risk_level": "MEDIUM",
+                "mitigation": "Distinguir supuesto de hecho. Argumentar que no concurren los requisitos del enriquecimiento injusto en este caso."
+            }
+        ]
+    },
+    "findings_detail": [
+        {
+            "segment_id": 4,
+            "text_snippet": "El demandado, con su conocido historial de incumplimientos en el sector inmobiliario...",
+            "analysis": {
+                "weakness_severity": "MEDIUM",
+                "fallacy_detected": "Ad Hominem",
+                "evidentiary_gap": null,
+                "counter_argument_suggestion": "Acusar mala fe procesal. Solicitar que se elimine referencia a hechos no acreditados y ajenos al objeto del procedimiento. Considerar recurso de reposición si el Juzgado admite."
+            }
+        },
+        {
+            "segment_id": 14,
+            "text_snippet": "El demandado prometió pagar la cantidad de 50.000€ en concepto de arras, como se desprende de las conversaciones mantenidas entre las partes...",
+            "analysis": {
+                "weakness_severity": "HIGH",
+                "fallacy_detected": "Petición de Principio",
+                "evidentiary_gap": "Afirmación de promesa de pago sin aportar contrato, email, SMS, WhatsApp ni documento que la acredite. La referencia genérica a 'conversaciones' no identifica fecha, interlocutores ni contenido.",
+                "counter_argument_suggestion": "Negar rotundamente la existencia de tal promesa. Las 'conversaciones' deben probarse documentalmente o mediante testigos previamente identificados. Principio dispositivo: art. 217.2 LEC. Solicitar desestimación del hecho."
+            }
+        },
+        {
+            "segment_id": 22,
+            "text_snippet": "El incumplimiento consistió en la falta de entrega de la obra... [vs. párrafo 8: 'la obra fue entregada con defectos graves']",
+            "analysis": {
+                "weakness_severity": "HIGH",
+                "fallacy_detected": "Contradicción Interna",
+                "evidentiary_gap": null,
+                "counter_argument_suggestion": "Destacar contradicción frontal: no puede haber simultáneamente 'falta de entrega' y 'entrega defectuosa'. Solicitar que el actor aclare su posición so pena de desestimación por petición oscura y confusa. Art. 424 LEC."
+            }
+        },
+        {
+            "segment_id": 31,
+            "text_snippet": "Los daños derivados del incumplimiento ascienden a 50.000€ en concepto de lucro cesante, correspondiente al beneficio que habría obtenido con la explotación del inmueble...",
+            "analysis": {
+                "weakness_severity": "HIGH",
+                "fallacy_detected": null,
+                "evidentiary_gap": "Lucro cesante: (1) No aporta pericial económica, (2) No aporta facturas ni contratos de explotación previos, (3) No justifica cálculo del quantum, (4) No acredita relación de causalidad con el incumplimiento alegado.",
+                "counter_argument_suggestion": "Solicitar inadmisión plena de la reclamación por lucro cesante. Subsidiariamente: (a) Exigir prueba pericial, (b) Impugnar por genérica e ilíquida, (c) Solicitar aplicación de art. 219 LEC (reserva de liquidación) si procede."
+            }
+        }
+    ],
+    "action_items": [
+        {
+            "priority": 1,
+            "type": "IMPUGNAR",
+            "segment": 14,
+            "action": "Negar promesa de pago. Principio dispositivo art. 217.2 LEC."
+        },
+        {
+            "priority": 1,
+            "type": "IMPUGNAR",
+            "segment": 31,
+            "action": "Solicitar inadmisión lucro cesante por falta de prueba del quantum."
+        },
+        {
+            "priority": 1,
+            "type": "IMPUGNAR",
+            "segment": 18,
+            "action": "Impugnar daños morales por genéricos y sin cuantificación objetiva."
+        },
+        {
+            "priority": 1,
+            "type": "IMPUGNAR",
+            "segment": 7,
+            "action": "Oponerse a prueba testifical genérica. Exigir identificación art. 284 LEC."
+        },
+        {
+            "priority": 2,
+            "type": "EXPONER_FALACIA",
+            "segment": 22,
+            "action": "Usar contradicción (no entrega vs. entrega defectuosa) para impugnar credibilidad."
+        },
+        {
+            "priority": 2,
+            "type": "EXPONER_FALACIA",
+            "segment": 4,
+            "action": "Mostrar Ad Hominem como indicio de mala fe procesal."
+        },
+        {
+            "priority": 3,
+            "type": "DEFENSA_ACTIVA",
+            "segment": 5,
+            "action": "No impugnar acta notarial. Centrar defensa en interpretación de obligaciones."
+        }
+    ],
+    "metadata": {
+        "document_analyzed": "demanda_civil_2025_03741.pdf",
+        "analysis_date": "2026-02-06T10:30:00Z",
+        "total_segments_analyzed": 35,
+        "high_severity_count": 4,
+        "medium_severity_count": 3,
+        "low_severity_count": 12,
+        "processing_time_seconds": 127,
+        "model_used": "llama-3-70b-instruct",
+        "temperature": 0.2
+    }
+}

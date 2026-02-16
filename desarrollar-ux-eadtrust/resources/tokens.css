@@ -1,0 +1,331 @@
+/**
+ * EADTrust Design System - CSS Tokens
+ * 
+ * Paleta institucional para servicios de confianza cualificados QTSP
+ * Regulación: eIDAS, ENS, ISO 27001
+ */
+
+:root {
+    /* ========================================
+     COLORES PRINCIPALES - Azul Institucional
+     ======================================== */
+    --ead-blue-primary: #003366;
+    --ead-blue-dark: #002244;
+    --ead-blue-accent: #0066cc;
+    --ead-blue-light: #e6f0ff;
+
+    /* ========================================
+     COLORES DE SOPORTE - Escala de Grises
+     ======================================== */
+    --ead-white: #ffffff;
+    --ead-gray-50: #f9fafb;
+    --ead-gray-100: #f3f4f6;
+    --ead-gray-light: #f5f7fa;
+    --ead-gray-200: #e5e7eb;
+    --ead-gray-border: #e5e7eb;
+    --ead-gray-300: #d1d5db;
+    --ead-gray-400: #9ca3af;
+    --ead-gray-medium: #6b7280;
+    --ead-gray-500: #6b7280;
+    --ead-gray-600: #4b5563;
+    --ead-gray-dark: #374151;
+    --ead-gray-700: #374151;
+    --ead-gray-800: #1f2937;
+    --ead-gray-900: #111827;
+
+    /* ========================================
+     COLORES SEMÁNTICOS - Estados
+     ======================================== */
+    --ead-success: #059669;
+    --ead-success-light: #d1fae5;
+    --ead-warning: #d97706;
+    --ead-warning-light: #fef3c7;
+    --ead-error: #dc2626;
+    --ead-error-light: #fee2e2;
+    --ead-info: #0284c7;
+    --ead-info-light: #e0f2fe;
+
+    /* ========================================
+     SUPERFICIES
+     ======================================== */
+    --ead-surface-page: var(--ead-gray-50);
+    --ead-surface-card: var(--ead-white);
+    --ead-surface-elevated: var(--ead-white);
+    --ead-surface-muted: var(--ead-gray-100);
+
+    /* ========================================
+     TIPOGRAFÍA
+     ======================================== */
+    --ead-font-family: 'Inter', 'Open Sans', 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+    /* Tamaños */
+    --ead-text-xs: 0.75rem;
+    /* 12px */
+    --ead-text-sm: 0.875rem;
+    /* 14px */
+    --ead-text-base: 1rem;
+    /* 16px */
+    --ead-text-lg: 1.125rem;
+    /* 18px */
+    --ead-text-xl: 1.25rem;
+    /* 20px */
+    --ead-text-2xl: 1.5rem;
+    /* 24px */
+    --ead-text-3xl: 2rem;
+    /* 32px */
+    --ead-text-4xl: 2.5rem;
+    /* 40px */
+
+    /* Pesos */
+    --ead-font-normal: 400;
+    --ead-font-medium: 500;
+    --ead-font-semibold: 600;
+    --ead-font-bold: 700;
+
+    /* Interlineado */
+    --ead-leading-tight: 1.25;
+    --ead-leading-snug: 1.375;
+    --ead-leading-normal: 1.5;
+    --ead-leading-relaxed: 1.625;
+    --ead-leading-loose: 1.75;
+
+    /* ========================================
+     ESPACIADO (Base 4px)
+     ======================================== */
+    --ead-space-0: 0;
+    --ead-space-1: 0.25rem;
+    /* 4px */
+    --ead-space-2: 0.5rem;
+    /* 8px */
+    --ead-space-3: 0.75rem;
+    /* 12px */
+    --ead-space-4: 1rem;
+    /* 16px */
+    --ead-space-5: 1.25rem;
+    /* 20px */
+    --ead-space-6: 1.5rem;
+    /* 24px */
+    --ead-space-8: 2rem;
+    /* 32px */
+    --ead-space-10: 2.5rem;
+    /* 40px */
+    --ead-space-12: 3rem;
+    /* 48px */
+    --ead-space-16: 4rem;
+    /* 64px */
+    --ead-space-20: 5rem;
+    /* 80px */
+    --ead-space-24: 6rem;
+    /* 96px */
+
+    /* ========================================
+     BORDES
+     ======================================== */
+    --ead-radius-none: 0;
+    --ead-radius-sm: 0.25rem;
+    /* 4px */
+    --ead-radius-md: 0.375rem;
+    /* 6px */
+    --ead-radius-lg: 0.5rem;
+    /* 8px */
+    --ead-radius-xl: 0.75rem;
+    /* 12px */
+    --ead-radius-2xl: 1rem;
+    /* 16px */
+    --ead-radius-full: 9999px;
+
+    --ead-border-width: 1px;
+    --ead-border-color: var(--ead-gray-border);
+
+    /* ========================================
+     SOMBRAS - Sutiles e institucionales
+     ======================================== */
+    --ead-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --ead-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --ead-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --ead-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+    /* ========================================
+     TRANSICIONES - Lentas y sobrias
+     ======================================== */
+    --ead-transition-fast: 150ms ease;
+    --ead-transition-normal: 200ms ease;
+    --ead-transition-slow: 300ms ease;
+
+    /* ========================================
+     Z-INDEX
+     ======================================== */
+    --ead-z-base: 0;
+    --ead-z-dropdown: 100;
+    --ead-z-sticky: 200;
+    --ead-z-modal: 300;
+    --ead-z-tooltip: 400;
+    --ead-z-max: 9999;
+
+    /* ========================================
+     ANCHO MÁXIMO
+     ======================================== */
+    --ead-max-w-content: 1200px;
+    --ead-max-w-narrow: 800px;
+    --ead-max-w-wide: 1400px;
+}
+
+/* ========================================
+   CLASES UTILITARIAS
+   ======================================== */
+
+/* Contenedor principal */
+.ead-container {
+    max-width: var(--ead-max-w-content);
+    margin: 0 auto;
+    padding: 0 var(--ead-space-6);
+}
+
+/* Card institucional */
+.ead-card {
+    background: var(--ead-surface-card);
+    border: var(--ead-border-width) solid var(--ead-border-color);
+    border-radius: var(--ead-radius-lg);
+    padding: var(--ead-space-6);
+}
+
+.ead-card:hover {
+    box-shadow: var(--ead-shadow-md);
+    transition: box-shadow var(--ead-transition-normal);
+}
+
+/* Botón primario */
+.ead-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ead-space-3) var(--ead-space-6);
+    background: var(--ead-blue-primary);
+    color: var(--ead-white);
+    font-weight: var(--ead-font-medium);
+    border-radius: var(--ead-radius-lg);
+    border: none;
+    cursor: pointer;
+    transition: background var(--ead-transition-fast);
+}
+
+.ead-btn-primary:hover {
+    background: var(--ead-blue-dark);
+}
+
+/* Botón secundario */
+.ead-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ead-space-3) var(--ead-space-6);
+    background: var(--ead-white);
+    color: var(--ead-gray-dark);
+    font-weight: var(--ead-font-medium);
+    border-radius: var(--ead-radius-lg);
+    border: var(--ead-border-width) solid var(--ead-border-color);
+    cursor: pointer;
+    transition: background var(--ead-transition-fast);
+}
+
+.ead-btn-secondary:hover {
+    background: var(--ead-gray-light);
+}
+
+/* Badge de certificación */
+.ead-cert-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ead-space-2);
+    padding: var(--ead-space-2) var(--ead-space-3);
+    background: var(--ead-gray-light);
+    border: var(--ead-border-width) solid var(--ead-border-color);
+    border-radius: var(--ead-radius-md);
+    font-size: var(--ead-text-xs);
+    color: var(--ead-gray-dark);
+}
+
+.ead-cert-badge img {
+    height: 1.25rem;
+    width: auto;
+}
+
+/* Grid de certificaciones */
+.ead-cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: var(--ead-space-4);
+    padding: var(--ead-space-6);
+    background: var(--ead-gray-light);
+    border-radius: var(--ead-radius-lg);
+    border: var(--ead-border-width) solid var(--ead-border-color);
+}
+
+.ead-cert-grid img {
+    filter: grayscale(100%);
+    opacity: 0.7;
+    transition: all var(--ead-transition-normal);
+}
+
+.ead-cert-grid img:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+/* Textos */
+.ead-text-primary {
+    color: var(--ead-gray-dark);
+}
+
+.ead-text-secondary {
+    color: var(--ead-gray-medium);
+}
+
+.ead-text-legal {
+    font-size: var(--ead-text-xs);
+    color: var(--ead-gray-medium);
+    line-height: var(--ead-leading-relaxed);
+}
+
+/* Link institucional */
+.ead-link {
+    color: var(--ead-blue-accent);
+    text-decoration: none;
+    transition: text-decoration var(--ead-transition-fast);
+}
+
+.ead-link:hover {
+    text-decoration: underline;
+}
+
+/* Estados */
+.ead-status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ead-space-1);
+    padding: var(--ead-space-1) var(--ead-space-2);
+    border-radius: var(--ead-radius-full);
+    font-size: var(--ead-text-xs);
+}
+
+.ead-status-active {
+    background: var(--ead-success-light);
+    color: var(--ead-success);
+}
+
+.ead-status-pending {
+    background: var(--ead-warning-light);
+    color: var(--ead-warning);
+}
+
+.ead-status-error {
+    background: var(--ead-error-light);
+    color: var(--ead-error);
+}
+
+.ead-status-dot {
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    background: currentColor;
+}

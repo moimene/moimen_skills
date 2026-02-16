@@ -1,0 +1,293 @@
+{
+    "name": "W0_DriveIngest",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "drive-ingest",
+                "options": {}
+            },
+            "id": "webhook-trigger",
+            "name": "Webhook Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                250,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "download",
+                "fileId": "={{ $json.file_id }}"
+            },
+            "id": "drive-download",
+            "name": "Download from Drive",
+            "type": "n8n-nodes-base.googleDrive",
+            "typeVersion": 3,
+            "position": [
+                470,
+                300
+            ],
+            "credentials": {
+                "googleDriveOAuth2Api": {
+                    "id": "GOOGLE_DRIVE_CREDENTIAL_ID",
+                    "name": "Google Drive account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const crypto = require('crypto');\nconst binaryData = $input.first().binary.data;\nconst buffer = Buffer.from(binaryData.data, 'base64');\nconst hash = crypto.createHash('md5').update(buffer).digest('hex');\n\nreturn [{\n  json: {\n    ...$input.first().json,\n    file_hash: hash,\n    file_size: buffer.length,\n    doc_id: crypto.randomUUID()\n  },\n  binary: $input.first().binary\n}];"
+            },
+            "id": "calculate-hash",
+            "name": "Calculate MD5 Hash",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                690,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{ $env.SUPABASE_URL }}/storage/v1/object/documents/{{ $json.run_id }}/{{ $json.filename }}",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "httpHeaderAuth",
+                "sendBody": true,
+                "contentType": "binaryData",
+                "inputDataFieldName": "data",
+                "options": {}
+            },
+            "id": "upload-storage",
+            "name": "Upload to Supabase Storage",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                910,
+                300
+            ],
+            "credentials": {
+                "httpHeaderAuth": {
+                    "id": "SUPABASE_AUTH_CREDENTIAL_ID",
+                    "name": "Supabase Service Key"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "insert",
+                "tableId": "documents",
+                "fieldsUi": {
+                    "fieldValues": [
+                        {
+                            "fieldName": "id",
+                            "fieldValue": "={{ $json.doc_id }}"
+                        },
+                        {
+                            "fieldName": "run_id",
+                            "fieldValue": "={{ $json.run_id }}"
+                        },
+                        {
+                            "fieldName": "filename",
+                            "fieldValue": "={{ $json.filename }}"
+                        },
+                        {
+                            "fieldName": "file_hash",
+                            "fieldValue": "={{ $json.file_hash }}"
+                        },
+                        {
+                            "fieldName": "storage_path",
+                            "fieldValue": "documents/{{ $json.run_id }}/{{ $json.filename }}"
+                        },
+                        {
+                            "fieldName": "status",
+                            "fieldValue": "UPLOADED"
+                        }
+                    ]
+                }
+            },
+            "id": "insert-document",
+            "name": "Insert Document Record",
+            "type": "n8n-nodes-base.supabase",
+            "typeVersion": 1,
+            "position": [
+                1130,
+                300
+            ],
+            "credentials": {
+                "supabaseApi": {
+                    "id": "SUPABASE_API_CREDENTIAL_ID",
+                    "name": "Supabase account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{ $env.CALLBACK_URL }}",
+                "authentication": "none",
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "run_id",
+                            "value": "={{ $json.run_id }}"
+                        },
+                        {
+                            "name": "status",
+                            "value": "UPLOADED"
+                        },
+                        {
+                            "name": "doc_id",
+                            "value": "={{ $json.doc_id }}"
+                        },
+                        {
+                            "name": "storage_path",
+                            "value": "documents/{{ $json.run_id }}/{{ $json.filename }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "callback-success",
+            "name": "Callback: Success",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1350,
+                300
+            ]
+        },
+        {
+            "parameters": {},
+            "id": "error-trigger",
+            "name": "Error Trigger",
+            "type": "n8n-nodes-base.errorTrigger",
+            "typeVersion": 1,
+            "position": [
+                910,
+                500
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{ $env.CALLBACK_URL }}",
+                "authentication": "none",
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "run_id",
+                            "value": "={{ $json.run_id }}"
+                        },
+                        {
+                            "name": "status",
+                            "value": "FAILED"
+                        },
+                        {
+                            "name": "error_message",
+                            "value": "={{ $json.error.message }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "callback-error",
+            "name": "Callback: Error",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1130,
+                500
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Download from Drive",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Download from Drive": {
+            "main": [
+                [
+                    {
+                        "node": "Calculate MD5 Hash",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Calculate MD5 Hash": {
+            "main": [
+                [
+                    {
+                        "node": "Upload to Supabase Storage",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Upload to Supabase Storage": {
+            "main": [
+                [
+                    {
+                        "node": "Insert Document Record",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Insert Document Record": {
+            "main": [
+                [
+                    {
+                        "node": "Callback: Success",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Error Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Callback: Error",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "staticData": null,
+    "tags": [
+        {
+            "name": "document-ingest"
+        },
+        {
+            "name": "template"
+        }
+    ],
+    "meta": {
+        "templateId": "W0_DriveIngest",
+        "description": "Pipeline de ingestión de documentos desde Google Drive a Supabase Storage",
+        "instanceId": "exported-from-skill"
+    }
+}

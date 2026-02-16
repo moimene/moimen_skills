@@ -1,0 +1,411 @@
+{
+    "name": "W2_RAGGraph_Query",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "rag-query",
+                "options": {}
+            },
+            "id": "webhook-trigger",
+            "name": "Webhook Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                250,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "assignments": {
+                    "assignments": [
+                        {
+                            "id": "query",
+                            "name": "query",
+                            "value": "={{ $json.query }}",
+                            "type": "string"
+                        },
+                        {
+                            "id": "run_id",
+                            "name": "run_id",
+                            "value": "={{ $json.run_id }}",
+                            "type": "string"
+                        },
+                        {
+                            "id": "top_k",
+                            "name": "top_k",
+                            "value": "={{ $json.top_k || 5 }}",
+                            "type": "number"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "prepare-query",
+            "name": "Prepare Query",
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                470,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "embedding",
+                "model": "text-embedding-3-small",
+                "input": "={{ $json.query }}"
+            },
+            "id": "generate-embedding",
+            "name": "Generate Query Embedding",
+            "type": "n8n-nodes-base.openAi",
+            "typeVersion": 1.4,
+            "position": [
+                690,
+                200
+            ],
+            "credentials": {
+                "openAiApi": {
+                    "id": "OPENAI_API_CREDENTIAL_ID",
+                    "name": "OpenAI account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{ $env.SUPABASE_URL }}/rest/v1/rpc/match_documents",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "httpHeaderAuth",
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"query_embedding\": {{ JSON.stringify($json.data[0].embedding) }},\n  \"match_count\": {{ $('Prepare Query').first().json.top_k }},\n  \"match_threshold\": 0.7\n}",
+                "options": {
+                    "timeout": 30000
+                }
+            },
+            "id": "pgvector-query",
+            "name": "pgvector Query",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                910,
+                200
+            ],
+            "credentials": {
+                "httpHeaderAuth": {
+                    "id": "SUPABASE_AUTH_CREDENTIAL_ID",
+                    "name": "Supabase Service Key"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{ $env.LIGHTRAG_URL }}/query",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "httpHeaderAuth",
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"query\": \"{{ $('Prepare Query').first().json.query }}\",\n  \"mode\": \"hybrid\"\n}",
+                "options": {
+                    "timeout": 300000
+                }
+            },
+            "id": "lightrag-query",
+            "name": "LightRAG Query",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                910,
+                400
+            ],
+            "credentials": {
+                "httpHeaderAuth": {
+                    "id": "LIGHTRAG_AUTH_CREDENTIAL_ID",
+                    "name": "LightRAG API Key"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "mode": "combine",
+                "combineBy": "combineAll",
+                "options": {}
+            },
+            "id": "merge-results",
+            "name": "Merge Results",
+            "type": "n8n-nodes-base.merge",
+            "typeVersion": 3,
+            "position": [
+                1130,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "const pgResults = $input.all()[0].json;\nconst lightragResult = $input.all()[1].json;\n\n// Combinar contextos\nconst vectorContext = Array.isArray(pgResults) \n  ? pgResults.map(r => r.content).join('\\n\\n---\\n\\n')\n  : '';\n\nconst graphContext = lightragResult.answer || '';\n\nreturn [{\n  json: {\n    query: $('Prepare Query').first().json.query,\n    run_id: $('Prepare Query').first().json.run_id,\n    vector_context: vectorContext,\n    graph_context: graphContext,\n    vector_count: Array.isArray(pgResults) ? pgResults.length : 0,\n    sources: Array.isArray(pgResults) \n      ? pgResults.map(r => ({ id: r.id, similarity: r.similarity }))\n      : []\n  }\n}];"
+            },
+            "id": "combine-context",
+            "name": "Combine Contexts",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1350,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "gpt-4o",
+                "messages": {
+                    "values": [
+                        {
+                            "content": "Eres un asistente experto que responde preguntas usando dos fuentes de información:\n\n1. BÚSQUEDA VECTORIAL: Fragmentos de documentos relevantes semánticamente\n2. GRAFO DE CONOCIMIENTO: Relaciones conceptuales entre entidades\n\nINSTRUCCIONES:\n1. Analiza ambas fuentes de información\n2. Prioriza información que aparezca en ambas fuentes (mayor confianza)\n3. Si hay contradicciones, indica cuál fuente parece más confiable y por qué\n4. Cita las fuentes cuando sea posible\n5. Si no tienes suficiente información, indica qué falta\n\nOUTPUT FORMAT (JSON):\n{\n  \"answer\": \"Respuesta completa y estructurada...\",\n  \"confidence\": 0.0-1.0,\n  \"sources_used\": [\"vector\", \"graph\"],\n  \"key_entities\": [\"entidad1\", \"entidad2\"],\n  \"needs_clarification\": true/false,\n  \"clarification_question\": \"...\" \n}",
+                            "role": "system"
+                        },
+                        {
+                            "content": "PREGUNTA: {{ $json.query }}\n\n---\n\nCONTEXTO VECTORIAL (Semántico):\n{{ $json.vector_context }}\n\n---\n\nCONTEXTO DE GRAFO (Conceptual):\n{{ $json.graph_context }}",
+                            "role": "user"
+                        }
+                    ]
+                },
+                "options": {
+                    "temperature": 0.3,
+                    "responseFormat": "json_object"
+                }
+            },
+            "id": "llm-fusion",
+            "name": "LLM Fusion",
+            "type": "n8n-nodes-base.openAi",
+            "typeVersion": 1.4,
+            "position": [
+                1570,
+                300
+            ],
+            "credentials": {
+                "openAiApi": {
+                    "id": "OPENAI_API_CREDENTIAL_ID",
+                    "name": "OpenAI account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const rawOutput = $input.first().json.message.content;\nconst parsed = JSON.parse(rawOutput);\nconst context = $('Combine Contexts').first().json;\n\nreturn [{\n  json: {\n    run_id: context.run_id,\n    query: context.query,\n    result: parsed,\n    metadata: {\n      vector_sources: context.vector_count,\n      graph_used: context.graph_context.length > 0\n    }\n  }\n}];"
+            },
+            "id": "format-response",
+            "name": "Format Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1790,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{ $env.CALLBACK_URL }}",
+                "authentication": "none",
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"run_id\": \"{{ $json.run_id }}\",\n  \"status\": \"COMPLETED\",\n  \"query\": \"{{ $json.query }}\",\n  \"answer\": \"{{ $json.result.answer }}\",\n  \"confidence\": {{ $json.result.confidence }},\n  \"metadata\": {{ JSON.stringify($json.metadata) }}\n}",
+                "options": {}
+            },
+            "id": "callback-success",
+            "name": "Callback: Success",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                2010,
+                300
+            ]
+        },
+        {
+            "parameters": {},
+            "id": "error-trigger",
+            "name": "Error Trigger",
+            "type": "n8n-nodes-base.errorTrigger",
+            "typeVersion": 1,
+            "position": [
+                1350,
+                500
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{ $env.CALLBACK_URL }}",
+                "authentication": "none",
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "run_id",
+                            "value": "={{ $json.run_id }}"
+                        },
+                        {
+                            "name": "status",
+                            "value": "FAILED"
+                        },
+                        {
+                            "name": "error_message",
+                            "value": "={{ $json.error.message }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "callback-error",
+            "name": "Callback: Error",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1570,
+                500
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Prepare Query",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Prepare Query": {
+            "main": [
+                [
+                    {
+                        "node": "Generate Query Embedding",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "LightRAG Query",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Generate Query Embedding": {
+            "main": [
+                [
+                    {
+                        "node": "pgvector Query",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "pgvector Query": {
+            "main": [
+                [
+                    {
+                        "node": "Merge Results",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "LightRAG Query": {
+            "main": [
+                [
+                    {
+                        "node": "Merge Results",
+                        "type": "main",
+                        "index": 1
+                    }
+                ]
+            ]
+        },
+        "Merge Results": {
+            "main": [
+                [
+                    {
+                        "node": "Combine Contexts",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Combine Contexts": {
+            "main": [
+                [
+                    {
+                        "node": "LLM Fusion",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "LLM Fusion": {
+            "main": [
+                [
+                    {
+                        "node": "Format Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Format Response": {
+            "main": [
+                [
+                    {
+                        "node": "Callback: Success",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Error Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Callback: Error",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "staticData": null,
+    "tags": [
+        {
+            "name": "rag"
+        },
+        {
+            "name": "lightrag"
+        },
+        {
+            "name": "hybrid-search"
+        },
+        {
+            "name": "template"
+        }
+    ],
+    "meta": {
+        "templateId": "W2_RAGGraph_Query",
+        "description": "Query híbrido: pgvector (semántico) + LightRAG (conceptual) con fusión LLM",
+        "instanceId": "exported-from-skill"
+    }
+}

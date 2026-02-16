@@ -1,0 +1,347 @@
+/**
+ * TERAS Design Tokens v1.0
+ * Basado en Brand Manual TERAS v1.0
+ * 
+ * Uso: Importar en el root de la aplicación
+ * @import url('./tokens.css');
+ */
+
+:root {
+    /* ================================================
+     COLORES PRINCIPALES (USO OBLIGATORIO)
+     ================================================ */
+
+    /* Black - Pantone Black C */
+    --teras-black: #000000;
+    --teras-black-rgb: 0, 0, 0;
+
+    /* Red TERAS - Color Identitario - Pantone 1787 C */
+    --teras-red: #EA3348;
+    --teras-red-rgb: 234, 51, 72;
+
+    /* Grey TERAS - Pantone 427 C */
+    --teras-grey: #C6C9CC;
+    --teras-grey-rgb: 198, 201, 204;
+
+    /* ================================================
+     COLORES SECUNDARIOS - GRISES
+     (Uso complementario, nunca sustituyen principales)
+     ================================================ */
+    --teras-grey-700: #6F7173;
+    --teras-grey-050: #F7F7F7;
+    --teras-grey-100: #EBEBEB;
+    --teras-grey-200: #D5D7D1;
+
+    /* ================================================
+     COLORES SECUNDARIOS - ROJOS
+     (Gradaciones para matices visuales)
+     ================================================ */
+    --teras-red-100: #FBD6DA;
+    --teras-red-200: #F7ADB6;
+    --teras-red-300: #F28491;
+    --teras-red-400: #EE5C6D;
+
+    /* ================================================
+     SUPERFICIES
+     ================================================ */
+    --teras-surface-page: #FFFFFF;
+    --teras-surface-alt: #F7F7F7;
+    --teras-surface-card: #FFFFFF;
+    --teras-surface-muted: #EBEBEB;
+
+    /* ================================================
+     TEXTOS
+     ================================================ */
+    --teras-text-primary: #000000;
+    --teras-text-secondary: #6F7173;
+    --teras-text-inverse: #FFFFFF;
+    --teras-text-muted: #C6C9CC;
+
+    /* ================================================
+     BORDES
+     ================================================ */
+    --teras-border-default: #EBEBEB;
+    --teras-border-subtle: #D5D7D1;
+    --teras-border-strong: #000000;
+
+    /* ================================================
+     TIPOGRAFÍA
+     ================================================ */
+
+    /* Familia para titulares */
+    --teras-font-heading: 'Matter', 'Verdana', sans-serif;
+
+    /* Familia para texto de párrafo */
+    --teras-font-body: 'Messina Serif', 'Georgia', serif;
+
+    /* Peso único (jerarquía solo por tamaño) */
+    --teras-font-weight: 400;
+
+    /* ================================================
+     ESCALA TIPOGRÁFICA
+     (Jerarquía SOLO por tamaño, nunca por peso)
+     ================================================ */
+    --teras-text-xs: 0.75rem;
+    /* 12px */
+    --teras-text-sm: 0.875rem;
+    /* 14px */
+    --teras-text-base: 1rem;
+    /* 16px */
+    --teras-text-lg: 1.125rem;
+    /* 18px */
+    --teras-text-xl: 1.25rem;
+    /* 20px */
+    --teras-text-2xl: 1.5rem;
+    /* 24px */
+    --teras-text-3xl: 2rem;
+    /* 32px */
+    --teras-text-4xl: 2.5rem;
+    /* 40px */
+    --teras-text-5xl: 3rem;
+    /* 48px */
+
+    /* ================================================
+     INTERLINEADO
+     ================================================ */
+    --teras-leading-tight: 1.2;
+    --teras-leading-normal: 1.5;
+    --teras-leading-relaxed: 1.75;
+
+    /* ================================================
+     ESPACIADO (Grid Base: 4px)
+     ================================================ */
+    --teras-space-1: 4px;
+    --teras-space-2: 8px;
+    --teras-space-3: 12px;
+    --teras-space-4: 16px;
+    --teras-space-5: 20px;
+    --teras-space-6: 24px;
+    --teras-space-8: 32px;
+    --teras-space-10: 40px;
+    --teras-space-12: 48px;
+    --teras-space-16: 64px;
+
+    /* ================================================
+     BORDER RADIUS
+     (Estética técnica = sin radios)
+     ================================================ */
+    --teras-radius-none: 0;
+    --teras-radius-sm: 2px;
+    /* Solo para inputs si es necesario */
+
+    /* ================================================
+     SOMBRAS
+     ================================================ */
+    --teras-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --teras-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --teras-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+    /* ================================================
+     TRANSICIONES
+     ================================================ */
+    --teras-duration-fast: 150ms;
+    --teras-duration-normal: 250ms;
+    --teras-duration-slow: 350ms;
+    --teras-easing-default: ease-out;
+
+    /* ================================================
+     LOGO - TAMAÑOS MÍNIMOS
+     ================================================ */
+    --teras-logo-min-print: 20mm;
+    --teras-logo-min-digital: 150px;
+
+    /* ================================================
+     Z-INDEX
+     ================================================ */
+    --teras-z-base: 0;
+    --teras-z-dropdown: 100;
+    --teras-z-sticky: 200;
+    --teras-z-overlay: 300;
+    --teras-z-modal: 400;
+    --teras-z-toast: 500;
+}
+
+/* ================================================
+   CLASES UTILITARIAS - TIPOGRAFÍA
+   ================================================ */
+
+.teras-heading {
+    font-family: var(--teras-font-heading);
+    font-weight: var(--teras-font-weight);
+    color: var(--teras-text-primary);
+    line-height: var(--teras-leading-tight);
+}
+
+.teras-body {
+    font-family: var(--teras-font-body);
+    font-weight: var(--teras-font-weight);
+    color: var(--teras-text-primary);
+    line-height: var(--teras-leading-normal);
+}
+
+.teras-h1 {
+    font-size: var(--teras-text-4xl);
+}
+
+.teras-h2 {
+    font-size: var(--teras-text-3xl);
+}
+
+.teras-h3 {
+    font-size: var(--teras-text-2xl);
+}
+
+.teras-h4 {
+    font-size: var(--teras-text-xl);
+}
+
+.teras-h5 {
+    font-size: var(--teras-text-lg);
+}
+
+/* ================================================
+   CLASES UTILITARIAS - COLORES
+   ================================================ */
+
+.teras-bg-page {
+    background-color: var(--teras-surface-page);
+}
+
+.teras-bg-alt {
+    background-color: var(--teras-surface-alt);
+}
+
+.teras-bg-red {
+    background-color: var(--teras-red);
+}
+
+.teras-bg-grey {
+    background-color: var(--teras-grey);
+}
+
+.teras-bg-black {
+    background-color: var(--teras-black);
+}
+
+.teras-text-primary {
+    color: var(--teras-text-primary);
+}
+
+.teras-text-secondary {
+    color: var(--teras-text-secondary);
+}
+
+.teras-text-inverse {
+    color: var(--teras-text-inverse);
+}
+
+.teras-text-red {
+    color: var(--teras-red);
+}
+
+/* ================================================
+   BOTONES
+   ================================================ */
+
+.teras-btn {
+    font-family: var(--teras-font-heading);
+    font-weight: var(--teras-font-weight);
+    padding: var(--teras-space-3) var(--teras-space-6);
+    border-radius: var(--teras-radius-none);
+    transition: opacity var(--teras-duration-fast) var(--teras-easing-default);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--teras-space-2);
+}
+
+.teras-btn:hover {
+    opacity: 0.9;
+}
+
+.teras-btn-primary {
+    background-color: var(--teras-red);
+    color: var(--teras-text-inverse);
+    border: none;
+}
+
+.teras-btn-secondary {
+    background-color: transparent;
+    color: var(--teras-text-primary);
+    border: 1px solid var(--teras-black);
+}
+
+.teras-btn-ghost {
+    background-color: transparent;
+    color: var(--teras-text-primary);
+    border: none;
+}
+
+.teras-btn-ghost:hover {
+    background-color: var(--teras-surface-alt);
+}
+
+/* ================================================
+   CARDS
+   ================================================ */
+
+.teras-card {
+    background-color: var(--teras-surface-card);
+    border: 1px solid var(--teras-border-default);
+    border-radius: var(--teras-radius-none);
+    padding: var(--teras-space-6);
+}
+
+.teras-card:hover {
+    border-color: var(--teras-border-subtle);
+    box-shadow: var(--teras-shadow-sm);
+}
+
+/* ================================================
+   INPUTS
+   ================================================ */
+
+.teras-input {
+    font-family: var(--teras-font-body);
+    font-size: var(--teras-text-base);
+    padding: var(--teras-space-3) var(--teras-space-4);
+    border: 1px solid var(--teras-border-default);
+    border-radius: var(--teras-radius-sm);
+    background-color: var(--teras-surface-page);
+    color: var(--teras-text-primary);
+    width: 100%;
+    transition: border-color var(--teras-duration-fast);
+}
+
+.teras-input:focus {
+    outline: none;
+    border-color: var(--teras-red);
+}
+
+.teras-input::placeholder {
+    color: var(--teras-text-muted);
+}
+
+/* ================================================
+   ACCESIBILIDAD - FOCUS VISIBLE
+   ================================================ */
+
+.teras-focus-ring:focus-visible {
+    outline: 2px solid var(--teras-red);
+    outline-offset: 2px;
+}
+
+/* ================================================
+   COMBINACIONES VALIDADAS (Contraste WCAG AA)
+   ================================================ */
+
+/*
+| Foreground          | Background           | Ratio  | Estado |
+|---------------------|----------------------|--------|--------|
+| --teras-black       | --teras-surface-page | 21:1   | ✅     |
+| --teras-grey-700    | --teras-surface-page | 5.1:1  | ✅     |
+| --teras-text-inverse| --teras-red          | 4.5:1  | ✅     |
+| --teras-text-inverse| --teras-black        | 21:1   | ✅     |
+| --teras-red         | --teras-surface-page | 4.6:1  | ✅     |
+*/

@@ -1,0 +1,151 @@
+# Detección automática de skills por tipo de proyecto
+# Basado en archivos/carpetas presentes en el proyecto
+#
+# Estructura:
+#   - detect: condiciones para detectar el tipo de proyecto
+#   - skills.global: skills del catálogo ~/.agent/skills/skills/
+#   - skills.local: skills personalizadas de Dropbox
+
+essentials:
+  # Siempre activas en cualquier proyecto
+  skills:
+    - concise-planning
+    - lint-and-validate
+    - git-pushing
+    - kaizen
+    - systematic-debugging
+
+rules:
+  # === PROYECTOS REACT/NEXT.JS ===
+  - name: "React/Next.js"
+    detect:
+      files: ["package.json"]
+      content_match:
+        file: "package.json"
+        patterns: ["react", "next"]
+    skills:
+      global:
+        - react-best-practices
+        - react-patterns
+        - nextjs-best-practices
+        - typescript-expert
+        - tailwind-patterns
+        - frontend-design
+        - cc-skill-frontend-patterns
+      local:
+        - aplicar-react-best-practices
+
+  # === PROYECTOS PYTHON ===
+  - name: "Python"
+    detect:
+      files_any: ["pyproject.toml", "requirements.txt", "setup.py", "Pipfile"]
+    skills:
+      global:
+        - python-patterns
+        - async-python-patterns
+        - python-best-practices
+        - python-cli-tools
+
+  # === PROYECTOS N8N / WORKFLOWS ===
+  - name: "n8n/Workflows"
+    detect:
+      files_pattern: ["*.workflow.json", "n8n-*.json", "W*_*.json"]
+      dirs: ["workflows"]
+    skills:
+      local:
+        - automatizar-workflows-n8n
+      global:
+        - workflow-automation
+        - inngest
+        - trigger-dev
+
+  # === PROYECTOS SUPABASE ===
+  - name: "Supabase"
+    detect:
+      files_any: ["supabase/config.toml"]
+      dirs: ["supabase"]
+      content_match:
+        file: "package.json"
+        patterns: ["@supabase/supabase-js"]
+    skills:
+      global:
+        - supabase-development
+        - database-design
+        - api-patterns
+
+  # === PROYECTOS LEGALTECH ===
+  - name: "LegalTech"
+    detect:
+      files_pattern: ["*guardian*", "*clause*", "*contract*"]
+      dirs: ["supabase/functions"]
+    skills:
+      local:
+        - desarrollar-ux-garrigues
+        - desarrollar-ux-gdigital
+        - desarrollar-ux-eadtrust
+        - automatizar-workflows-n8n
+        - orquestar-agentes
+
+  # === PROYECTOS TERAS ===
+  - name: "Teras Capital"
+    detect:
+      content_any: ["teras", "terascapital", "TERAS"]
+    skills:
+      local:
+        - desarrollar-ux-teras
+
+  # === PROYECTOS SECURITY ===
+  - name: "Security"
+    detect:
+      files_any: [".security", "SECURITY.md"]
+      dirs: ["security", "pentest", "audit"]
+    skills:
+      global:
+        - api-security-best-practices
+        - sql-injection-testing
+        - vulnerability-scanner
+        - owasp-patterns
+        - security-checklist
+
+  # === PROYECTOS AI/AGENTS ===
+  - name: "AI/Agents"
+    detect:
+      content_match:
+        file: "package.json"
+        patterns: ["langchain", "openai", "@anthropic-ai"]
+      files_any: ["agents/", "prompts/"]
+    skills:
+      local:
+        - orquestar-agentes
+        - integrar-lightrag-grafo-conocimiento
+      global:
+        - agent-orchestration-improve-agent
+        - prompt-engineer
+        - rag-engineer
+        - langgraph
+
+  # === PROYECTOS DOCKER/DEVOPS ===
+  - name: "DevOps"
+    detect:
+      files_any: ["Dockerfile", "docker-compose.yml", ".github/workflows"]
+    skills:
+      global:
+        - docker-expert
+        - docker-compose-patterns
+        - github-actions
+        - ci-cd-patterns
+
+  # === PROYECTOS TYPESCRIPT ===
+  - name: "TypeScript"
+    detect:
+      files: ["tsconfig.json"]
+    skills:
+      global:
+        - typescript-expert
+        - typescript-patterns
+        - cc-skill-coding-standards
+
+# Paths de skills
+paths:
+  global: "~/.agent/skills/skills"
+  local: "/Users/moisesmenendez/Dropbox/Codigo/agent/skills"

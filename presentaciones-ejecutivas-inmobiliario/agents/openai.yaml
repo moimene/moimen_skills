@@ -1,0 +1,4 @@
+interface:
+  display_name: "Presentaciones inmobiliarias"
+  short_description: "Teasers ejecutivos para oportunidades inmobiliarias"
+  default_prompt: "Usa $presentaciones-ejecutivas-inmobiliario para armar un teaser ejecutivo inmobiliario con KPIs, mercado y plan de negocio."

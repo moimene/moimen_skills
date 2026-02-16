@@ -1,0 +1,301 @@
+/**
+ * g-digital Design System - CSS Tokens
+ * 
+ * Operador tecnológico del Grupo Garrigues
+ * Herencia visual de Garrigues + Identidad de innovación
+ */
+
+:root {
+    /* ========================================
+     COLORES DE MARCA - Herencia Garrigues
+     ======================================== */
+    --gd-brand-primary: #004438;
+    /* Pantone 3308 C */
+    --gd-brand-accent: #009a77;
+    /* Verde brillante */
+    --gd-brand-dark: #003030;
+    /* Verde muy oscuro */
+    --gd-brand-light: #e6f5f1;
+    /* Verde muy claro */
+
+    /* ========================================
+     ESCALA DE GRISES
+     ======================================== */
+    --gd-white: #ffffff;
+    --gd-gray-50: #f9fafb;
+    --gd-gray-100: #f3f4f6;
+    --gd-gray-200: #e5e7eb;
+    --gd-gray-300: #d1d5db;
+    --gd-gray-400: #9ca3af;
+    --gd-gray-500: #6b7280;
+    --gd-gray-600: #4b5563;
+    --gd-gray-700: #374151;
+    --gd-gray-800: #1f2937;
+    --gd-gray-900: #111827;
+
+    /* ========================================
+     COLORES SEMÁNTICOS
+     ======================================== */
+    --gd-success: #059669;
+    --gd-success-light: #d1fae5;
+    --gd-warning: #d97706;
+    --gd-warning-light: #fef3c7;
+    --gd-error: #dc2626;
+    --gd-error-light: #fee2e2;
+    --gd-info: #0284c7;
+    --gd-info-light: #e0f2fe;
+
+    /* ========================================
+     SUPERFICIES
+     ======================================== */
+    --gd-surface-page: var(--gd-white);
+    --gd-surface-secondary: var(--gd-gray-50);
+    --gd-surface-card: var(--gd-white);
+    --gd-surface-muted: var(--gd-gray-100);
+
+    /* ========================================
+     TIPOGRAFÍA
+     ======================================== */
+    --gd-font-family: 'Montserrat', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+    /* Tamaños */
+    --gd-text-xs: 0.75rem;
+    --gd-text-sm: 0.875rem;
+    --gd-text-base: 1rem;
+    --gd-text-lg: 1.125rem;
+    --gd-text-xl: 1.25rem;
+    --gd-text-2xl: 1.5rem;
+    --gd-text-3xl: 2rem;
+    --gd-text-4xl: 2.5rem;
+
+    /* Pesos */
+    --gd-font-normal: 400;
+    --gd-font-medium: 500;
+    --gd-font-semibold: 600;
+    --gd-font-bold: 700;
+
+    /* Interlineado */
+    --gd-leading-tight: 1.25;
+    --gd-leading-normal: 1.5;
+    --gd-leading-relaxed: 1.625;
+    --gd-leading-loose: 1.75;
+
+    /* ========================================
+     ESPACIADO
+     ======================================== */
+    --gd-space-1: 0.25rem;
+    --gd-space-2: 0.5rem;
+    --gd-space-3: 0.75rem;
+    --gd-space-4: 1rem;
+    --gd-space-5: 1.25rem;
+    --gd-space-6: 1.5rem;
+    --gd-space-8: 2rem;
+    --gd-space-10: 2.5rem;
+    --gd-space-12: 3rem;
+    --gd-space-16: 4rem;
+    --gd-space-20: 5rem;
+    --gd-space-24: 6rem;
+
+    /* ========================================
+     BORDES
+     ======================================== */
+    --gd-radius-sm: 0.25rem;
+    --gd-radius-md: 0.5rem;
+    --gd-radius-lg: 0.75rem;
+    --gd-radius-xl: 1rem;
+    --gd-radius-2xl: 1.5rem;
+    --gd-radius-full: 9999px;
+
+    --gd-border-color: var(--gd-gray-200);
+
+    /* ========================================
+     SOMBRAS - Sutiles
+     ======================================== */
+    --gd-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --gd-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --gd-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --gd-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+
+    /* ========================================
+     TRANSICIONES - Lentas, elegantes
+     ======================================== */
+    --gd-transition-fast: 150ms ease;
+    --gd-transition-normal: 200ms ease;
+    --gd-transition-slow: 300ms ease;
+
+    /* ========================================
+     LAYOUT
+     ======================================== */
+    --gd-max-w-narrow: 640px;
+    --gd-max-w-content: 1024px;
+    --gd-max-w-wide: 1280px;
+}
+
+/* ========================================
+   CLASES UTILITARIAS
+   ======================================== */
+
+/* Contenedor */
+.gd-container {
+    max-width: var(--gd-max-w-content);
+    margin: 0 auto;
+    padding: 0 var(--gd-space-6);
+}
+
+.gd-container-wide {
+    max-width: var(--gd-max-w-wide);
+    margin: 0 auto;
+    padding: 0 var(--gd-space-6);
+}
+
+/* Card de solución */
+.gd-card {
+    background: var(--gd-surface-card);
+    border: 1px solid var(--gd-border-color);
+    border-radius: var(--gd-radius-xl);
+    padding: var(--gd-space-6);
+    transition: box-shadow var(--gd-transition-normal);
+}
+
+.gd-card:hover {
+    box-shadow: var(--gd-shadow-lg);
+}
+
+/* Botón primario institucional */
+.gd-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--gd-space-3) var(--gd-space-6);
+    background: var(--gd-brand-primary);
+    color: var(--gd-white);
+    font-weight: var(--gd-font-medium);
+    border-radius: var(--gd-radius-lg);
+    border: none;
+    cursor: pointer;
+    transition: background var(--gd-transition-fast);
+}
+
+.gd-btn-primary:hover {
+    background: var(--gd-brand-dark);
+}
+
+/* Botón secundario */
+.gd-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--gd-space-3) var(--gd-space-6);
+    background: var(--gd-white);
+    color: var(--gd-gray-700);
+    font-weight: var(--gd-font-medium);
+    border-radius: var(--gd-radius-lg);
+    border: 1px solid var(--gd-border-color);
+    cursor: pointer;
+    transition: background var(--gd-transition-fast);
+}
+
+.gd-btn-secondary:hover {
+    background: var(--gd-gray-50);
+}
+
+/* Link sutil */
+.gd-link {
+    color: var(--gd-brand-accent);
+    text-decoration: none;
+    font-weight: var(--gd-font-medium);
+}
+
+.gd-link:hover {
+    text-decoration: underline;
+}
+
+/* Sección con fondo */
+.gd-section {
+    padding: var(--gd-space-20) 0;
+}
+
+.gd-section-alt {
+    padding: var(--gd-space-20) 0;
+    background: var(--gd-surface-secondary);
+}
+
+/* Trust grid (logos partners) */
+.gd-trust-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: var(--gd-space-8);
+    align-items: center;
+}
+
+.gd-trust-grid img {
+    height: 2rem;
+    width: auto;
+    margin: 0 auto;
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transition: all var(--gd-transition-normal);
+}
+
+.gd-trust-grid img:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+/* Badge de pertenencia */
+.gd-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gd-space-2);
+    padding: var(--gd-space-2) var(--gd-space-4);
+    background: var(--gd-gray-50);
+    border-radius: var(--gd-radius-full);
+    font-size: var(--gd-text-sm);
+    color: var(--gd-gray-700);
+}
+
+/* Input de formulario */
+.gd-input {
+    width: 100%;
+    padding: var(--gd-space-3) var(--gd-space-4);
+    border: 1px solid var(--gd-gray-300);
+    border-radius: var(--gd-radius-lg);
+    font-size: var(--gd-text-base);
+    transition: border-color var(--gd-transition-fast), box-shadow var(--gd-transition-fast);
+}
+
+.gd-input:focus {
+    outline: none;
+    border-color: var(--gd-brand-primary);
+    box-shadow: 0 0 0 3px var(--gd-brand-light);
+}
+
+/* Textarea */
+.gd-textarea {
+    width: 100%;
+    padding: var(--gd-space-3) var(--gd-space-4);
+    border: 1px solid var(--gd-gray-300);
+    border-radius: var(--gd-radius-lg);
+    font-size: var(--gd-text-base);
+    resize: vertical;
+    min-height: 120px;
+}
+
+.gd-textarea:focus {
+    outline: none;
+    border-color: var(--gd-brand-primary);
+    box-shadow: 0 0 0 3px var(--gd-brand-light);
+}
+
+/* Textos */
+.gd-text-primary {
+    color: var(--gd-gray-900);
+}
+
+.gd-text-secondary {
+    color: var(--gd-gray-500);
+}
+
+.gd-text-accent {
+    color: var(--gd-brand-accent);
+}
